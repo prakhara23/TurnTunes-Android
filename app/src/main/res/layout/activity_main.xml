@@ -43,7 +43,8 @@
             android:textColor="@color/colorAccent"
             android:textSize="20sp"
             android:layout_above="@+id/join"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:onClick="hostParty" />
     </RelativeLayout>
 
 </FrameLayout>

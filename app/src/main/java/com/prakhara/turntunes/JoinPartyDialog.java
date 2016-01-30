@@ -1,6 +1,5 @@
 package com.prakhara.turntunes;
 
-//import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -9,7 +8,6 @@ import android.view.LayoutInflater;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class JoinPartyDialog extends DialogFragment {
 
@@ -28,7 +26,7 @@ public class JoinPartyDialog extends DialogFragment {
                         Dialog dialogView = (Dialog) dialog;
                         EditText partyText = (EditText) dialogView.findViewById(R.id.partyName);
                         String partyName = partyText.getText().toString().trim();
-                        ((MainActivity) getActivity()).joinParty(partyName);
+                        ((MainActivity) getActivity()).joinParty(partyName.toLowerCase());
                     }
                 })
                 .setNegativeButton(R.string.cancelDialog, new DialogInterface.OnClickListener() {
