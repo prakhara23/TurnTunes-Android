@@ -21,10 +21,14 @@ public class JoinPartyDialog extends DialogFragment {
         final View mainView = inflater.inflate(R.layout.join_dialog, null);
 
         builder.setView(mainView)
-                .setTitle(R.string.partyJoin)
+                .setTitle(R.string.joinBut)
                 .setPositiveButton(R.string.joinDialog, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        checkInput(dialog);
+                        //checkInput(dialog);
+                        Dialog dialogView = (Dialog) dialog;
+                        EditText partyText = (EditText) dialogView.findViewById(R.id.partyName);
+                        String partyName = partyText.getText().toString().trim();
+                        ((MainActivity) getActivity()).joinParty(partyName);
                     }
                 })
                 .setNegativeButton(R.string.cancelDialog, new DialogInterface.OnClickListener() {
@@ -35,18 +39,5 @@ public class JoinPartyDialog extends DialogFragment {
                 });
         // Create the AlertDialog object and return it
         return builder.create();
-    }
-
-    private void checkInput(DialogInterface dialog) {
-        Dialog dialogView = (Dialog) dialog;
-        EditText partyText = (EditText) dialogView.findViewById(R.id.partyName);
-        String partyName = partyText.getText().toString().trim();
-        if (partyName.matches("")) {
-            // Try and get SnackBar to work
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please enter a party name", Toast.LENGTH_SHORT);
-            toast.show();
-        } else {
-            ((MainActivity) getActivity()).joinParty(partyName);
-        }
     }
 }
