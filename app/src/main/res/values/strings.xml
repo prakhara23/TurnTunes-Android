@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TurnTunes</string>
+    <string name="backgroundImg">background img</string>
+    <string name="hostBut">Host Party</string>
+    <string name="joinBut">Join Party</string>
 </resources>
