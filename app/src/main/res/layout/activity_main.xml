@@ -21,25 +21,26 @@
 
         <Button android:theme="@style/AppTheme.JoinButton"
             android:id="@+id/join"
+            android:textAllCaps="true"
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:text="@string/joinBut"
-            android:textColor="@color/white"
-            android:textAllCaps="true"
+            android:textColor="@color/colorAccent"
             android:textSize="20sp"
             android:layout_marginBottom="52dp"
             android:layout_alignWithParentIfMissing="false"
             android:layout_alignParentBottom="true"
             android:layout_alignLeft="@+id/host"
-            android:layout_alignStart="@+id/host" />
+            android:layout_alignStart="@+id/host"
+            android:onClick="requestParty" />
 
         <Button android:theme="@style/AppTheme.HostButton"
             android:id="@+id/host"
+            android:textAllCaps="true"
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:text="@string/hostBut"
-            android:textColor="@color/white"
-            android:textAllCaps="true"
+            android:textColor="@color/colorAccent"
             android:textSize="20sp"
             android:layout_above="@+id/join"
             android:layout_centerHorizontal="true" />

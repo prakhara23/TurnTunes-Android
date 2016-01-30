@@ -3,4 +3,8 @@
     <string name="backgroundImg">background img</string>
     <string name="hostBut">Host Party</string>
     <string name="joinBut">Join Party</string>
+    <string name="partyJoin">Enter party name</string>
+    <string name="cancelDialog">Cancel</string>
+    <string name="joinDialog">Join</string>
+    <string name="partyName">Party</string>
 </resources>
