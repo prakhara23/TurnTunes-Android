@@ -1,7 +1,13 @@
 package com.prakhara.turntunes;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.widget.SearchView;
+
 import com.firebase.client.Firebase;
 import java.util.Queue;
 
@@ -23,6 +29,14 @@ public class PartyRoom extends MainActivity {
         party = new Firebase(MAIN_URL + partyName);
         setTitle("Party: " + partyName);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
 
     @Override
     protected void onStart() {

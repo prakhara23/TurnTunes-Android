@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:TurnTunes="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/search"
+        android:title="@string/addSong"
+        android:icon="@android:drawable/ic_menu_search"
+        TurnTunes:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.widget.SearchView" />
+</menu>
