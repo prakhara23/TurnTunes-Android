@@ -3,7 +3,7 @@ package com.prakhara.turntunes;
 public class User {
 
     private boolean host;   // Determines if user is host or a guest.
-    private int hostKey;    // TODO: implement the ability for host to still be host if they leave the room
+    private int hostKey;    // TODO: implement the ability for host to still be host if they leave the room, or make sub-class HOST
     private String party;   // Name of the party they are part of.
 
     public User() {

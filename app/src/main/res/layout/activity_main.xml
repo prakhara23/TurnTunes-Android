@@ -1,50 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context="com.prakhara.turntunes.MainActivity">
 
     <ImageView
-        android:id = "@+id/party_img"
-        android:src = "@drawable/party"
-        android:scaleType = "centerCrop"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:id = "@+id/brand_img"
+        android:src = "@drawable/brand"
         android:layout_gravity="center"
-        android:contentDescription="@string/backgroundImg" />
+        android:contentDescription="@string/backgroundImg"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/mainLayout">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/app_name"
+        android:gravity="center"
+        android:id="@+id/brand_text"
+        android:textSize="35dp"
+        android:layout_marginTop="170dp"
+        android:layout_centerHorizontal="true" />
 
-        <Button android:theme="@style/AppTheme.JoinButton"
-            android:id="@+id/join"
-            android:textAllCaps="true"
-            android:layout_width="250dp"
-            android:layout_height="60dp"
-            android:text="@string/joinBut"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp"
-            android:layout_marginBottom="52dp"
-            android:layout_alignWithParentIfMissing="false"
-            android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@+id/host"
-            android:layout_alignStart="@+id/host"
-            android:onClick="requestParty" />
+    <Button android:theme="@style/AppTheme.JoinButton"
+        android:id="@+id/join"
+        android:textAllCaps="true"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="@string/joinBut"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:layout_marginBottom="52dp"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/host"
+        android:layout_alignStart="@+id/host"
+        android:onClick="requestParty" />
 
-        <Button android:theme="@style/AppTheme.HostButton"
-            android:id="@+id/host"
-            android:textAllCaps="true"
-            android:layout_width="250dp"
-            android:layout_height="60dp"
-            android:text="@string/hostBut"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp"
-            android:layout_above="@+id/join"
-            android:layout_centerHorizontal="true"
-            android:onClick="hostParty" />
-    </RelativeLayout>
+    <Button android:theme="@style/AppTheme.HostButton"
+        android:id="@+id/host"
+        android:textAllCaps="true"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="@string/hostBut"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:layout_above="@+id/join"
+        android:layout_centerHorizontal="true"
+        android:onClick="hostParty" />
 
-</FrameLayout>
+</RelativeLayout>

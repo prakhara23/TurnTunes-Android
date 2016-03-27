@@ -2,11 +2,14 @@ package com.prakhara.turntunes;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -24,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
+
+        // Change the font of the brand text
+        TextView brand = (TextView) findViewById(R.id.brand_text);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/RuthlessWreckin2.ttf");
+        brand.setTypeface(font);
     }
 
     private void joinPartyExists(final String party, final boolean user) {
@@ -62,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             char c = chars[random.nextInt(chars.length)];
             sb.append(c);
         }

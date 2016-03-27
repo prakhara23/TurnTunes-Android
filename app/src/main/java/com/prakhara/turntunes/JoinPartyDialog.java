@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 public class JoinPartyDialog extends DialogFragment {
@@ -22,7 +23,6 @@ public class JoinPartyDialog extends DialogFragment {
                 .setTitle(R.string.joinBut)
                 .setPositiveButton(R.string.joinDialog, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //checkInput(dialog);
                         Dialog dialogView = (Dialog) dialog;
                         EditText partyText = (EditText) dialogView.findViewById(R.id.partyName);
                         String partyName = partyText.getText().toString().trim();
@@ -37,5 +37,12 @@ public class JoinPartyDialog extends DialogFragment {
                 });
         // Create the AlertDialog object and return it
         return builder.create();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // Show the keyboard when Dialog is created
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        super.onActivityCreated(savedInstanceState);
     }
 }

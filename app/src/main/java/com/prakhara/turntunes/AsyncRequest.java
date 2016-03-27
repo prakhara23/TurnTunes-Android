@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -17,22 +18,22 @@ import java.net.URL;
  *  us to use the same object for Requests through the lifetime of app instead of creating a
  *  RequestQueue many times
  */
-public class GetSongs extends AsyncTask<String, String, String> {
+public class AsyncRequest extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
 
-        HttpURLConnection soundcloud = null;
+        HttpURLConnection connection = null;
         BufferedReader content = null;
 
         try {
             // Retrieve the URL passed and then connect to the site
             URL url  = new URL(params[0]);
-            soundcloud = (HttpURLConnection) url.openConnection();
-            soundcloud.connect();
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
 
             // Prepare the reading of the data from Soundcloud API
-            InputStream stream = soundcloud.getInputStream();
+            InputStream stream = connection.getInputStream();
             content = new BufferedReader(new InputStreamReader(stream));
             StringBuilder buffer = new StringBuilder();
 
@@ -46,15 +47,6 @@ public class GetSongs extends AsyncTask<String, String, String> {
 
             // Turn the JSON response into a string so we can turn it into an array
             String searchResults = buffer.toString();
-            // The results of the search
-            JSONArray results = new JSONArray(searchResults);
-
-            for (int i = 0; i < results.length(); i++) {
-                // Turn each song from the response into a java native JSON Obj
-                JSONObject song = results.getJSONObject(i);
-                Log.i("PartyRoom", song.getString("title"));
-                Log.i("PartyRoom", song.getJSONObject("user").getString("username"));
-            }
 
             // Return the results
             return searchResults;
@@ -62,8 +54,8 @@ public class GetSongs extends AsyncTask<String, String, String> {
             e.printStackTrace();
         } finally {
             // Always ensure that the HTTP connection is disconnected after it has been used
-            if (soundcloud != null) {
-                soundcloud.disconnect();
+            if (connection != null) {
+                connection.disconnect();
             }
             try {
                 if (content != null) {
@@ -78,7 +70,19 @@ public class GetSongs extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
+    protected void onPostExecute(String searchResults) {
+        // The results of the search
+        try {
+            JSONArray results = new JSONArray(searchResults);
+
+            for (int i = 0; i < results.length(); i++) {
+                // Turn each song from the response into a java native JSON Obj
+                JSONObject song = results.getJSONObject(i);
+                Log.i("PartyRoom", song.getString("title"));
+                Log.i("PartyRoom", song.getJSONObject("user").getString("username"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.prakhara.turntunes;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -34,6 +36,10 @@ public class PartyRoom extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_room);
 
+        // Set up Action Bar
+        
+
+        // Set up party details
         Intent intent = getIntent();
         String partyName = intent.getStringExtra("PARTY_NAME");
         boolean host = intent.getExtras().getBoolean("HOST_ID");
@@ -51,7 +57,7 @@ public class PartyRoom extends MainActivity {
         getMenuInflater().inflate(R.menu.options_menu, menu);
         MenuItem addSong = menu.findItem(R.id.search); // The menu item
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(addSong);
-        //searchView.setQueryHint("Add Song..."); // Try and get the resource XML to show this hint
+        searchView.setQueryHint("Add Song From Soundcloud"); // Try and get the resource XML to show this hint
 
         // What to do when the user submits their search query from the action bar
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -62,7 +68,7 @@ public class PartyRoom extends MainActivity {
                 String url = "http://api.soundcloud.com/tracks?q=" + query + "&format=json&client_id=77ccdf65d566bdc8bc276ec2f7a6c1fb&limit=10";
                 Log.i("PartyRoom", query);
                 // Make the call to Soundcloud and handle the response
-                new GetSongs().execute(url);
+                new AsyncRequest().execute(url);
                 return true;
             }
 
@@ -85,6 +91,7 @@ public class PartyRoom extends MainActivity {
 
     private void setUpComponents() {
         // Set the Media Player
+        //http://developer.android.com/guide/topics/media/mediaplayer.html
         songPlayer = new MediaPlayer();
         songPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         songPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -102,30 +109,41 @@ public class PartyRoom extends MainActivity {
             }
         });
 
-
-        //Retrieve the songs already on the playlist
-        playlist.addValueEventListener(new ValueEventListener() {
-
+        // Add listener to check when a new song is added (All songs in playlist gets added when Activity loads)
+        playlist.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                // Read in all the songs in Playlist
-                for (DataSnapshot songs : snapshot.getChildren()) {
-                    Song song = songs.getValue(Song.class);
-                    //songQueue.add(song); do we even need the queue?
-                    Log.i("FIREBASE SONG", song.getSong());
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Song song = dataSnapshot.getValue(Song.class);
+                Log.i("FIREBASE SONG Line 111", song.getSong());
             }
 
+            // Don't need any of the following methods for now
             @Override
-            public void onCancelled(FirebaseError error) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String prevKey) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {}
         });
+
+        //Looks like we don't need it
+        //http://stackoverflow.com/questions/27978078/how-to-separate-initial-data-load-from-incremental-children-with-firebase
+        //this is for playlist addValueListenerjj
 
         // Add listener so that when the song changes, the device is notified
         nowPlaying.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Song nowPlaying = dataSnapshot.getValue(Song.class);
-                changeSong(nowPlaying);
+                if (dataSnapshot.getValue() != null) {
+                    Song nowPlaying = dataSnapshot.getValue(Song.class);
+                    Log.i("SONG", nowPlaying.toString());
+                    changeSong(nowPlaying);
+                }
             }
 
             @Override
