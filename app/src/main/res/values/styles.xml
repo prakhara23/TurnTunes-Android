@@ -1,10 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!-- Hide the shadow under the action bar -->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
     </style>
 
     <style name="HomeTheme" parent="@style/AppTheme">
@@ -24,6 +27,10 @@
 
     <style name="AppTheme.JoinButton" parent="Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="elevation">0dp</item>
     </style>
 
 </resources>

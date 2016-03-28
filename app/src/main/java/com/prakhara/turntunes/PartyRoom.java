@@ -1,15 +1,17 @@
 package com.prakhara.turntunes;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -17,6 +19,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.util.Queue;
 
@@ -36,8 +39,17 @@ public class PartyRoom extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_room);
 
-        // Set up Action Bar
-        
+        // Set up Tab Layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.partyToolbar);
+        setSupportActionBar(toolbar);
+
+        // ViewPager allows management of the lifecycle of pages (used with fragments to switch pages)
+        ViewPager viewPager = (ViewPager) findViewById(R.id.partyViewPager);
+        setupViewPager(viewPager);
+
+        // Create the tabs that correspond with each page
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.partyTabLayout);
+        tabLayout.setupWithViewPager(viewPager);
 
         // Set up party details
         Intent intent = getIntent();
@@ -83,7 +95,7 @@ public class PartyRoom extends MainActivity {
 
     @Override
     protected void onDestroy() {
-        // Release the MediaPlayer when activity is destryoed to prevent memory leak
+        // Release the MediaPlayer when activity is destroyed to prevent memory leak
         songPlayer.release();
         songPlayer = null;
         super.onDestroy();
@@ -165,4 +177,14 @@ public class PartyRoom extends MainActivity {
             e.printStackTrace();
         }
     }
+
+    private void setupViewPager (ViewPager view) {
+        // Create adapter to populate the pages inside of our ViewPager
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new PlaylistFragment(), "PLAYLIST");
+        adapter.addFragment(new NowPlayingFragment(), "NOW PLAYING");
+        view.setAdapter(adapter);
+    }
+
+
 }
