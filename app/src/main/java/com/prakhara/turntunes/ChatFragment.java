@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class NowPlayingFragment extends Fragment {
+public class ChatFragment extends Fragment {
 
-    public NowPlayingFragment() {
+    public ChatFragment() {
 
     }
 

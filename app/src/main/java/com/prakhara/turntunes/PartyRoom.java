@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -21,14 +22,15 @@ import com.firebase.client.ValueEventListener;
 
 import java.awt.font.TextAttribute;
 import java.io.IOException;
-import java.util.Queue;
+import java.util.List;
 
 public class PartyRoom extends MainActivity {
 
-    private static Firebase playlist;
+    // private static Firebase playlist;
+    private static String partyName;
     private static Firebase nowPlaying;
     private static User user;
-    private Queue<Song> songQueue;
+    private List<Song> songQueue;
     private MediaPlayer songPlayer;
 
 
@@ -41,7 +43,7 @@ public class PartyRoom extends MainActivity {
 
         // Set up Tab Layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.partyToolbar);
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar); // Already have a toolbar, no need to attach it again
 
         // ViewPager allows management of the lifecycle of pages (used with fragments to switch pages)
         ViewPager viewPager = (ViewPager) findViewById(R.id.partyViewPager);
@@ -53,10 +55,10 @@ public class PartyRoom extends MainActivity {
 
         // Set up party details
         Intent intent = getIntent();
-        String partyName = intent.getStringExtra("PARTY_NAME");
+        partyName = intent.getStringExtra("PARTY_NAME");
         boolean host = intent.getExtras().getBoolean("HOST_ID");
         user = new User(host, partyName);
-        playlist = new Firebase(MAIN_URL + partyName + "/playlist");
+        //playlist = new Firebase(MAIN_URL + partyName + "/playlist");
         nowPlaying = new Firebase(MAIN_URL + partyName + "/now-playing");
         setTitle("Party: " + partyName);
 
@@ -101,6 +103,10 @@ public class PartyRoom extends MainActivity {
         super.onDestroy();
     }
 
+    public List<Song> getPlaylist() {
+        return songQueue;
+    }
+
     private void setUpComponents() {
         // Set the Media Player
         //http://developer.android.com/guide/topics/media/mediaplayer.html
@@ -122,10 +128,11 @@ public class PartyRoom extends MainActivity {
         });
 
         // Add listener to check when a new song is added (All songs in playlist gets added when Activity loads)
-        playlist.addChildEventListener(new ChildEventListener() {
+        /*playlist.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Song song = dataSnapshot.getValue(Song.class);
+                songQueue.add(song);
                 Log.i("FIREBASE SONG Line 111", song.getSong());
             }
 
@@ -141,7 +148,7 @@ public class PartyRoom extends MainActivity {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {}
-        });
+        });*/
 
         //Looks like we don't need it
         //http://stackoverflow.com/questions/27978078/how-to-separate-initial-data-load-from-incremental-children-with-firebase
@@ -181,8 +188,15 @@ public class PartyRoom extends MainActivity {
     private void setupViewPager (ViewPager view) {
         // Create adapter to populate the pages inside of our ViewPager
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new PlaylistFragment(), "PLAYLIST");
-        adapter.addFragment(new NowPlayingFragment(), "NOW PLAYING");
+        /* Sey up playlist fragment */
+        Fragment playlistFragment = new PlaylistFragment();
+        Bundle bundle = new Bundle(1);
+        bundle.putString("PARTY_URL", MAIN_URL + partyName);
+        playlistFragment.setArguments(bundle);
+
+        Fragment chatFragment = new ChatFragment();
+        adapter.addFragment(playlistFragment, "PLAYLIST");
+        adapter.addFragment(chatFragment, "CHAT");
         view.setAdapter(adapter);
     }
 
