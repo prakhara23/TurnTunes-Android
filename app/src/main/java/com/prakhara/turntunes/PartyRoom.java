@@ -14,23 +14,20 @@ import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.util.List;
 
 public class PartyRoom extends MainActivity {
 
     // private static Firebase playlist;
-    private static String partyName;
-    private static Firebase nowPlaying;
-    private static User user;
-    private List<Song> songQueue;
+    private String partyName;
+    private Firebase nowPlaying;
+    private User user;
     private MediaPlayer songPlayer;
 
 
@@ -40,18 +37,6 @@ public class PartyRoom extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_room);
-
-        // Set up Tab Layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.partyToolbar);
-        //setSupportActionBar(toolbar); // Already have a toolbar, no need to attach it again
-
-        // ViewPager allows management of the lifecycle of pages (used with fragments to switch pages)
-        ViewPager viewPager = (ViewPager) findViewById(R.id.partyViewPager);
-        setupViewPager(viewPager);
-
-        // Create the tabs that correspond with each page
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.partyTabLayout);
-        tabLayout.setupWithViewPager(viewPager);
 
         // Set up party details
         Intent intent = getIntent();
@@ -63,6 +48,18 @@ public class PartyRoom extends MainActivity {
         setTitle("Party: " + partyName);
 
         setUpComponents();
+
+        // Set up Tab Layout
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.partyToolbar);
+        //setSupportActionBar(toolbar); // Already have a toolbar, no need to attach it again
+
+        // ViewPager allows management of the lifecycle of pages (used with fragments to switch pages)
+        ViewPager viewPager = (ViewPager) findViewById(R.id.partyViewPager);
+        setupViewPager(viewPager);
+
+        // Create the tabs that correspond with each page
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.partyTabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -101,10 +98,6 @@ public class PartyRoom extends MainActivity {
         songPlayer.release();
         songPlayer = null;
         super.onDestroy();
-    }
-
-    public List<Song> getPlaylist() {
-        return songQueue;
     }
 
     private void setUpComponents() {

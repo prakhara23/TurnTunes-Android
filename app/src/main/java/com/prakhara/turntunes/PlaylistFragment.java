@@ -23,7 +23,7 @@ public class PlaylistFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Song> playlist = new ArrayList<Song>();
-    private static Firebase playlistRef;
+    private Firebase playlistRef;
 
     public PlaylistFragment() { }
 
