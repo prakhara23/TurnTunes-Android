@@ -20,7 +20,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.io.IOException;
-import java.util.List;
 
 public class PartyRoom extends MainActivity {
 

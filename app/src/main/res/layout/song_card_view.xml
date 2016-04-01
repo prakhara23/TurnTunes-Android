@@ -4,9 +4,14 @@
     android:id="@+id/playlistCardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    card_view:cardBackgroundColor="@color/black"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="@dimen/cardview_default_elevation">
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginTop="2.5dp"
+    android:layout_marginBottom="2.5dp"
+    android:padding="5dp"
+    card_view:cardBackgroundColor="@color/promptGrey"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="@dimen/cardview_default_elevation" >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,15 +21,22 @@
             android:id="@+id/playlistCover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="15dp" />
+            android:layout_marginStart="2.5dp"
+            android:layout_marginEnd="2.5dp"
+            android:padding="5dp"
+            android:maxWidth="75dp"
+            android:maxHeight="75dp"
+            android:adjustViewBounds="true" />
 
         <TextView
             android:id="@+id/playlistSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/playlistCover"
+            android:layout_toEndOf="@+id/playlistCover"
             android:layout_alignParentTop="true"
             android:textSize="15sp" />
 

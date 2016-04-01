@@ -1,5 +1,8 @@
 package com.prakhara.turntunes;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -42,7 +45,14 @@ public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistRecycl
 
     @Override
     public void onBindViewHolder(SongViewHolder songViewHolder, int songindex) {
-        songViewHolder.songName.setText(playlist.get(songindex).getSong());
+        Song curSong = playlist.get(songindex);
+        songViewHolder.songName.setText(curSong.getSong());
+        String cover = curSong.getImg();
+        if (cover.equals("img/cover-art.png")) {
+            songViewHolder.cover.setImageResource(R.drawable.cover_art);
+        } else {
+            new LoadSongImage(songViewHolder.cover).execute(cover);
+        }
     }
 
     @Override
