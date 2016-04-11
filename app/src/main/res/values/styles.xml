@@ -8,11 +8,9 @@
         <!-- Hide the shadow under the action bar -->
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
-    </style>
-
-    <style name="HomeTheme" parent="@style/AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="searchViewStyle">@style/PartySearchView</item>
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -31,6 +29,10 @@
 
     <style name="AppTheme.ActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="elevation">0dp</item>
+    </style>
+
+    <style name="PartySearchView" parent="Widget.AppCompat.Light.SearchView">
+        <item name="searchHintIcon">@null</item>
     </style>
 
 </resources>

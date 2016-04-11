@@ -42,15 +42,13 @@ public class PartyRoom extends MainActivity {
         partyName = intent.getStringExtra("PARTY_NAME");
         boolean host = intent.getExtras().getBoolean("HOST_ID");
         user = new User(host, partyName);
-        //playlist = new Firebase(MAIN_URL + partyName + "/playlist");
         nowPlaying = new Firebase(MAIN_URL + partyName + "/now-playing");
-        setTitle("Party: " + partyName);
-
         setUpComponents();
 
         // Set up Tab Layout
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.partyToolbar);
-        //setSupportActionBar(toolbar); // Already have a toolbar, no need to attach it again
+        Toolbar toolbar = (Toolbar) findViewById(R.id.partyToolbar);
+        toolbar.setTitle("Party: " + partyName);
+        setSupportActionBar(toolbar); // Already have a toolbar, no need to attach it again
 
         // ViewPager allows management of the lifecycle of pages (used with fragments to switch pages)
         ViewPager viewPager = (ViewPager) findViewById(R.id.partyViewPager);
@@ -67,7 +65,9 @@ public class PartyRoom extends MainActivity {
         getMenuInflater().inflate(R.menu.options_menu, menu);
         MenuItem addSong = menu.findItem(R.id.search); // The menu item
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(addSong);
-        searchView.setQueryHint("Add Song From Soundcloud"); // Try and get the resource XML to show this hint
+        searchView.setQueryHint("Add song from Soundcloud"); // Try and get the resource XML to show this hint
+
+        Log.i("PartyRoom", "HIE");
 
         // What to do when the user submits their search query from the action bar
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

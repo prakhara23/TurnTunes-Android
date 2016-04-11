@@ -57,6 +57,7 @@ public class PlaylistFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Song song = dataSnapshot.getValue(Song.class);
                 playlist.add(song);
+                Log.i("FRAG", song.getSong());
                 mAdapter.notifyDataSetChanged();
             }
 

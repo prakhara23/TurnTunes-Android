@@ -7,5 +7,5 @@
     <string name="cancelDialog">Cancel</string>
     <string name="joinDialog">Join</string>
     <string name="partyName">Party Name</string>
-    <string name="addSong">Add a song</string>
+    <string name="addSong">Add a song from Soundcloud</string>
 </resources>
