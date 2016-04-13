@@ -1,9 +1,12 @@
 package com.prakhara.turntunes;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -13,6 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -23,7 +30,6 @@ import java.io.IOException;
 
 public class PartyRoom extends MainActivity {
 
-    // private static Firebase playlist;
     private String partyName;
     private Firebase nowPlaying;
     private User user;
@@ -57,6 +63,10 @@ public class PartyRoom extends MainActivity {
         // Create the tabs that correspond with each page
         TabLayout tabLayout = (TabLayout) findViewById(R.id.partyTabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+
+        View bottomSheet = findViewById(R.id.partyNowPlaying);
+        setupBottomSheet(bottomSheet);
     }
 
     @Override
@@ -67,24 +77,27 @@ public class PartyRoom extends MainActivity {
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(addSong);
         searchView.setQueryHint("Add song from Soundcloud"); // Try and get the resource XML to show this hint
 
-        Log.i("PartyRoom", "HIE");
-
         // What to do when the user submits their search query from the action bar
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // When user submits the query, send the query to Soundcloud
-                query = query.replace(" ", "+");
-                String url = "http://api.soundcloud.com/tracks?q=" + query + "&format=json&client_id=77ccdf65d566bdc8bc276ec2f7a6c1fb&limit=10";
-                Log.i("PartyRoom", query);
-                // Make the call to Soundcloud and handle the response
-                new AsyncRequest().execute(url);
+                searchSoundcloud(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 return true;
+            }
+
+            private void searchSoundcloud(String query) {
+                // If we need live search, call this function in onQueryTextChange
+                // When user submits the query, send the query to Soundcloud
+                query = query.replace(" ", "+");
+                String url = "http://api.soundcloud.com/tracks?q=" + query + "&format=json&client_id=77ccdf65d566bdc8bc276ec2f7a6c1fb&limit=10";
+                Log.i("PartyRoom fun", query);
+                // Make the call to Soundcloud and handle the response
+                new AsyncRequest().execute(url);
             }
         });
 
@@ -119,33 +132,6 @@ public class PartyRoom extends MainActivity {
             }
         });
 
-        // Add listener to check when a new song is added (All songs in playlist gets added when Activity loads)
-        /*playlist.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Song song = dataSnapshot.getValue(Song.class);
-                songQueue.add(song);
-                Log.i("FIREBASE SONG Line 111", song.getSong());
-            }
-
-            // Don't need any of the following methods for now
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String prevKey) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {}
-        });*/
-
-        //Looks like we don't need it
-        //http://stackoverflow.com/questions/27978078/how-to-separate-initial-data-load-from-incremental-children-with-firebase
-        //this is for playlist addValueListenerjj
-
         // Add listener so that when the song changes, the device is notified
         nowPlaying.addValueEventListener(new ValueEventListener() {
             @Override
@@ -154,6 +140,17 @@ public class PartyRoom extends MainActivity {
                     Song nowPlaying = dataSnapshot.getValue(Song.class);
                     Log.i("SONG", nowPlaying.toString());
                     changeSong(nowPlaying);
+
+                    // Populate the now playing view
+                    ImageView cover = (ImageView) findViewById(R.id.nowPlayingCover);
+                    TextView songTitle = (TextView) findViewById(R.id.nowPlayingSong);
+                    songTitle.setText(nowPlaying.getSong());
+                    String img = nowPlaying.getImg();
+                    if (img.equals("img/cover-art.png")) {
+                        cover.setImageResource(R.drawable.cover_art);
+                    } else {
+                        new LoadSongImage(cover).execute(img);
+                    }
                 }
             }
 
@@ -192,5 +189,43 @@ public class PartyRoom extends MainActivity {
         view.setAdapter(adapter);
     }
 
+    private void setupBottomSheet(View bottomSheet) {
+        final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // React to state change
+            }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // React to dragging events
+            }
+        });
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        final View partyRoom = findViewById(R.id.partyRoom);
+        partyRoom.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                Rect r = new Rect();
+                partyRoom.getWindowVisibleDisplayFrame(r);
+                int screenHeight = partyRoom.getRootView().getHeight();
+
+                // r.bottom is the position above soft keypad or device button.
+                // if keypad is shown, the r.bottom is smaller than that before.
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                    behavior.setHideable(true);
+                    behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                else {
+                    behavior.setHideable(false);
+                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+        });
+    }
 
 }
