@@ -9,5 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="2.5dp"
-        android:paddingBottom="2.5dp" />
+        android:paddingBottom="?attr/actionBarSize"
+        android:layout_marginBottom="2.5dp"/>
 </LinearLayout>

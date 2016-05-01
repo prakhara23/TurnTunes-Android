@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -38,6 +39,7 @@ public class PartyRoom extends MainActivity {
 
     //Soundcloud api keys
     //http://api.soundcloud.com/tracks.json?client_id=77ccdf65d566bdc8bc276ec2f7a6c1fb&q=back%20to%20back%20drake&limit=10
+    //https://www.youtube.com/watch?v=VAgKp-BYv1I&nohtml5=False
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,7 @@ public class PartyRoom extends MainActivity {
 
 
         View bottomSheet = findViewById(R.id.partyNowPlaying);
+        //bottomSheet.bringToFront();
         setupBottomSheet(bottomSheet);
     }
 
@@ -141,15 +144,23 @@ public class PartyRoom extends MainActivity {
                     Log.i("SONG", nowPlaying.toString());
                     changeSong(nowPlaying);
 
-                    // Populate the now playing view
+                    // Populate the now playing view (collapsed)
                     ImageView cover = (ImageView) findViewById(R.id.nowPlayingCover);
                     TextView songTitle = (TextView) findViewById(R.id.nowPlayingSong);
+                    // Populate the now playing view (opened)
+                    ImageView coverOpen = (ImageView) findViewById(R.id.nowPlayingCoverOpen);
+                    TextView songTitleOpen = (TextView) findViewById(R.id.nowPlayingSongOpen);
+
                     songTitle.setText(nowPlaying.getSong());
+                    songTitleOpen.setText(nowPlaying.getSong());
+
                     String img = nowPlaying.getImg();
                     if (img.equals("img/cover-art.png")) {
                         cover.setImageResource(R.drawable.cover_art);
+                        coverOpen.setImageResource(R.drawable.cover_art);
                     } else {
                         new LoadSongImage(cover).execute(img);
+                        new LoadSongImage(coverOpen).execute(img);
                     }
                 }
             }
@@ -195,6 +206,15 @@ public class PartyRoom extends MainActivity {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 // React to state change
+                RelativeLayout sneakNowPlaying = (RelativeLayout) findViewById(R.id.collapsedNowPlaying);
+                RelativeLayout openNowPlaying = (RelativeLayout) findViewById(R.id.openedNowPlaying);
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    sneakNowPlaying.setVisibility(View.GONE);
+                    openNowPlaying.setVisibility(View.VISIBLE);
+                } else {
+                    sneakNowPlaying.setVisibility(View.VISIBLE);
+                    openNowPlaying.setVisibility(View.GONE);
+                }
             }
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
@@ -203,6 +223,8 @@ public class PartyRoom extends MainActivity {
         });
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+        // The following code hides the bottom sheet when the keyboard is up so that screen
+        // isn't cluttered.
         final View partyRoom = findViewById(R.id.partyRoom);
         partyRoom.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
