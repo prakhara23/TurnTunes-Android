@@ -1,5 +1,6 @@
 package com.prakhara.turntunes;
 
+import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,7 +19,13 @@ import java.net.URL;
  *  us to use the same object for Requests through the lifetime of app instead of creating a
  *  RequestQueue many times
  */
-public class AsyncRequest extends AsyncTask<String, String, String> {
+public class RequestSongs extends AsyncTask<String, String, String> {
+
+    private SearchResults searchActivity;
+
+    public RequestSongs(SearchResults parentActivity) {
+        searchActivity = parentActivity;
+    }
 
     @Override
     protected String doInBackground(String... params) {
@@ -42,9 +49,6 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
             while((lineData = content.readLine()) != null) {
                 buffer.append(lineData);
             }
-            //Return the JSON
-            Log.i("PartyRoom", buffer.toString());
-
             // Turn the JSON response into a string so we can turn it into an array
             String searchResults = buffer.toString();
 
@@ -78,6 +82,14 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
             for (int i = 0; i < results.length(); i++) {
                 // Turn each song from the response into a java native JSON Obj
                 JSONObject song = results.getJSONObject(i);
+                Song s = new Song();
+                s.setSong(song.getString("title") + " - " + song.getJSONObject("user").getString("username"));
+                s.setUrl(song.getString("stream_url"));
+                if (song.isNull("artwork_url"))
+                    s.setImg("img/cover-art.png");
+                else
+                    s.setImg(song.getString("artwork_url"));
+                searchActivity.addResult(s);
                 Log.i("PartyRoom", song.getString("title"));
                 Log.i("PartyRoom", song.getJSONObject("user").getString("username"));
             }

@@ -1,5 +1,7 @@
 package com.prakhara.turntunes;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.media.AudioManager;
@@ -77,14 +79,20 @@ public class PartyRoom extends MainActivity {
         // Add the search icon and menu options to the ActionBar
         getMenuInflater().inflate(R.menu.options_menu, menu);
         MenuItem addSong = menu.findItem(R.id.search); // The menu item
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(addSong);
+
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setQueryHint("Add song from Soundcloud"); // Try and get the resource XML to show this hint
 
         // What to do when the user submits their search query from the action bar
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchSoundcloud(query);
+                //searchSoundcloud(query);
                 return true;
             }
 
@@ -100,9 +108,9 @@ public class PartyRoom extends MainActivity {
                 String url = "http://api.soundcloud.com/tracks?q=" + query + "&format=json&client_id=77ccdf65d566bdc8bc276ec2f7a6c1fb&limit=10";
                 Log.i("PartyRoom fun", query);
                 // Make the call to Soundcloud and handle the response
-                new AsyncRequest().execute(url);
+                new RequestSongs().execute(url);
             }
-        });
+        });*/
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -113,6 +121,15 @@ public class PartyRoom extends MainActivity {
         songPlayer.release();
         songPlayer = null;
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        Bundle appData = new Bundle();
+        appData.putString("PARTY_NAME", partyName);
+        appData.putString("MAIN_URL", MAIN_URL);
+        startSearch(null, false, appData, false);
+        return true;
     }
 
     private void setUpComponents() {
@@ -196,7 +213,7 @@ public class PartyRoom extends MainActivity {
 
         Fragment chatFragment = new ChatFragment();
         adapter.addFragment(playlistFragment, "PLAYLIST");
-        adapter.addFragment(chatFragment, "CHAT");
+        //adapter.addFragment(chatFragment, "CHAT"); Hidden until chat functionality works
         view.setAdapter(adapter);
     }
 
